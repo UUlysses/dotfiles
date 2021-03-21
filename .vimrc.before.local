@@ -1,0 +1,142 @@
+" Notes {
+    " Author: David Chen
+    " Last Change: Oct 6, 2016
+" }
+
+" Environment {
+
+    " Identify platform {
+        silent function! OSX()
+            return has('macunix')
+        endfunction
+        silent function! LINUX()
+            return has('unix') && !has('macunix') && !has('win32unix')
+        endfunction
+        silent function! WINDOWS()
+            return  (has('win32') || has('win64'))
+        endfunction
+    " }
+
+    " Plugin check {
+        silent function! LUA()
+            return has('lua') && (v:version > 703 || v:version == 703 && has('patch885'))
+        endfunction
+
+    " }
+
+" }
+
+" General {
+
+    let g:spf13_no_autochdir = 1         " prevent this behavior
+    let php_folding=0
+    let g:spf13_no_easyWindows = 1
+    " let g:spf13_no_nerd_tree_state = 1
+    let g:spf13_keep_trailing_whitespace = 1
+
+" }
+
+" Bundles {
+    " support plugin groups:['general', 'neocomplete', 'writing', 'neocomplete', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'misc',]
+    " ['general', 'python', 'programming', 'neocomplete', 'neocomplcache',]
+    if !exists('g:spf13_bundle_groups')
+        let g:spf13_bundle_groups=['general', 'neocomplete', 'php', 'snipmate', 'programming', 'neocomplcache', 'misc',]
+    endif
+
+    if LUA()
+        call remove(g:spf13_bundle_groups, -1)
+    endif
+
+    " vim-airline {
+        " let g:airline_powerline_fonts = 1
+        let g:airline_extensions = ['ctrlp', 'tabline']
+        let g:airline_theme='light'
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tabline#buffers_label = 'b'
+        " let g:spf13_use_old_powerline= 1
+        " let g:spf13_use_powerline= 1
+        let g:Powerline_symbols= 'fancy'
+        let g:Powerline_symbols_override = {
+            \ 'BRANCH': 'R',
+            \ 'LINE': 'L',
+            \ }
+        " let g:airline_left_sep='>'  " Slightly fancier than '>'
+        " let g:airline_right_sep='<' " Slightly fancier than '<'
+        " let loaded_minibufexplorer = 1
+        let g:spf13_noninvasive_completion = 1
+        let g:loaded_syntastic_plugin = 1 " Disable the Syntastic (syntax checker) plugin
+        let g:miniBufExplorerAutoStart = 0
+        let g:miniBufExplCloseOnSelect = 1
+        let g:miniBufExplStatusLineText = "-BufExplorer-"
+        let g:miniBufExplVSplit = 35
+        let g:miniBufExplBRSplit = 0
+        let g:did_minibufexplorer_syntax_inits = 1
+        " Highlighting {
+        if has('gui_running') && exists('g:did_minibufexplorer_syntax_inits')
+            function! <SID>RenderSyntax()
+                "MiniBufExpl Color Examples
+                if has("syntax")
+                  hi MBEActive guifg=#A8FF60 guibg=NONE gui=NONE ctermfg=green ctermbg=NONE cterm=NONE
+                  hi MBEIdentifier guifg=#FF73FD guibg=NONE gui=NONE ctermfg=magenta ctermbg=NONE cterm=NONE
+                  hi MBEActiveNormal guifg=#ffffff guibg=#00875f gui=NONE ctermfg=255 ctermbg=29 cterm=NONE
+                  " hi MBEIdentifier guifg=#ffffff guibg=#A8FF60 gui=NONE ctermfg=255 ctermbg=green cterm=NONE
+                  hi def link MBENormal                Comment
+                  hi def link MBEChanged               Error
+                  hi def link MBEVisibleNormal         MBEIdentifier
+                  hi def link MBEVisibleChanged        Search
+                  hi def link MBEVisibleActiveNormal   MBEActive
+                  hi def link MBEVisibleActiveChanged  Special
+                endif
+            endfunction
+            autocmd ColorScheme * call <SID>RenderSyntax()
+        endif
+        " }
+        " let g:miniBufExplShowBufNumbers = 0
+        let g:bufexplorer_version = "7.4.9"
+        " let g:miniBufExplMapCTabSwitchBufs = 1
+    " }
+
+    " ctrlp {
+        if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
+            " let g:ctrlp_use_caching = 0
+            let g:ctrlp_log = 2
+            let g:ctrlp_clear_cache_on_exit = 0
+            let g:ctrlp_root_markers = ['.ctrlp_mark']
+        endif
+    "}
+
+    " mtth/scratch {
+        let g:scratch_autohide = 0
+    " }
+
+    " Session List {
+        let g:spf13_no_open_last_session = 1
+    " }
+
+" }
+
+" GUI Settings {
+    let g:spf13_no_big_font = 1
+    " GVIM- (here instead of .gvimrc)
+    if has('gui_running')
+        set guioptions-=T           " Remove the toolbar
+        set guioptions-=m           " Remove the menubar
+        set guioptions-=l           " Remove the scrolling
+        set guioptions-=L
+        set guioptions-=r
+        set guioptions-=R
+        set lines=34
+        set gcr=a:block-blinkon0           " stop cursor
+
+        if LINUX() && has("gui_running")
+            set guifont=Consolas\ for\ Powerline\ 11,Andale\ Mono\ Regular\ 12,Menlo\ Regular\ 11,Consolas\ Regular\ 12,Courier\ New\ Regular\ 14
+        elseif OSX() && has("gui_running")
+            set guifont=Andale\ Mono\ Regular:h12,Menlo\ Regular:h11,Consolas\ Regular:h12,Courier\ New\ Regular:h14
+        elseif WINDOWS() && has("gui_running")
+            " Source_Code_Pro:h11,Andale_Mono:h10.5:b,Consolas:h10.5
+            set guifont=Consolas_for_Powerline_FixedD:h11,Sauce_Code_Powerline:h12,Courier_New:h10,Menlo:h10
+        endif
+
+    endif
+
+" }

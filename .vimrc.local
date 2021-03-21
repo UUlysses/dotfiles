@@ -1,0 +1,328 @@
+" Notes {
+    " Author: David Chen
+    " Last Change: Oct 6, 2016
+" }
+
+" General {
+
+    set nospell
+    "   let g:user_no_autochdir = 1
+    if !exists('g:user_no_autochdir')
+        let g:user_work_dir_map = {
+            \ 'wtx_mg': 'C:/Users/weitianxia/work_home/wwwroot/wtx_mg',
+            \ 'wtx_api': 'C:/Users/weitianxia/work_home/wwwroot/wtx_api',
+            \ 'wtx_wx': 'C:/Users/weitianxia/work_home/wwwroot/wtx_wx',
+            \ 'A20201202microservices': 'C:/Users/weitianxia/work_home/wwwroot/20201205microservices',
+            \ 'api_jrcm88_com': 'C:/Users/weitianxia/work_home/wwwroot/api.jrcm88.com/trunk',
+            \ 'api_live_com': 'C:/Users/weitianxia/work_home/wwwroot/api.live.com/trunk',
+            \ 'juche51_backend': 'S:/juche51.net/protected/modules/backend',
+            \ }
+    endif
+
+" }
+
+" Formatting {
+
+    let g:spf13_keep_trailing_whitespace_ext = 1
+    autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace_ext') | call StripTrailingWhitespaceExt() | endif
+" }
+
+" Key (re)Mappings {
+
+    noremap <C-J>     <C-W>j
+    noremap <C-K>     <C-W>k
+    noremap <C-H>     <C-W>h
+    noremap <C-L>     <C-W>l
+
+    " noremap <C-TAB>   <C-W>w
+    " noremap <C-S-TAB> <C-W>W
+
+    map <Leader>be :MBEOpen<cr> :MBEFocus<cr> :setlocal number<cr>
+    map <Leader>bc :MBEClose<cr>
+    map <Leader>bt :MBEToggle<cr>
+    map <Leader>bf :MBEFocus<cr>
+
+    map <C-f> :call JsBeautify()<cr>
+
+    map ; <Plug>(easymotion-prefix)
+
+    autocmd FileType javascript vnoremap <buffer>  <c-f> :call RangeJsBeautify()<cr>
+    autocmd FileType json vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
+    autocmd FileType jsx vnoremap <buffer> <c-f> :call RangeJsxBeautify()<cr>
+    autocmd FileType html vnoremap <buffer> <c-f> :call RangeHtmlBeautify()<cr>
+    autocmd FileType css vnoremap <buffer> <c-f> :call RangeCSSBeautify()<cr>
+    autocmd FileType php vnoremap <buffer> <c-f> :call RangeJsonBeautify()<cr>
+
+    " map <Leader>f2 setlocal expandtab shiftwidth=2 softtabstop=2
+    map <Leader>t2 :setlocal expandtab shiftwidth=2 softtabstop=2<cr>
+    map <Leader>t4 :setlocal expandtab shiftwidth=4 softtabstop=4<cr>
+
+    map <Leader>c :close<cr>
+    map <Leader>w :write<cr>
+    map <Leader>r :NERDTreeFind<cr>
+
+    map <Leader>yf :let @* = expand('%:t')<cr>
+    map <Leader>yw :let @* = expand('%:h')<cr>
+
+    noremap <C-TAB>   :MBEbf<CR>
+    noremap <C-S-TAB> :MBEbb<CR>
+
+    noremap <C-Down>  <C-W>j
+    noremap <C-Up>    <C-W>k
+    noremap <C-Left>  <C-W>h
+    noremap <C-Right> <C-W>l
+" }
+
+
+" Bundles {
+
+    " Snippets & AutoComplete {
+        if count(g:spf13_bundle_groups, 'neocomplete')
+            Bundle 'Konfekt/FastFold'
+        endif
+    " }
+
+    " vim-airline {
+        " let g:airline_powerline_fonts = 1
+        " let g:spf13_use_old_powerline= 1
+        if !exists('g:airline_symbols')
+            let g:airline_symbols = {}
+        endif
+        " old vim-powerline symbols
+        let g:airline_left_sep = "\u2B80"
+        let g:airline_left_alt_sep = "\u2B81"
+        let g:airline_right_sep = "\u2B82"
+        let g:airline_right_alt_sep = "\u2B83"
+        let g:airline_symbols.branch = "\u2B60"
+        " let g:airline_symbols.branch = "\uf020"
+        let g:airline_symbols.readonly = "\u2B64"
+        let g:airline_symbols.linenr = "\u2B61"
+        let g:airline#extensions#tabline#left_sep = "\u2B80"
+        let g:airline#extensions#tabline#left_alt_sep = "\u2B81"
+        let g:airline#extensions#tabline#buffer_nr_show = 1
+        let g:airline#extensions#tabline#right_sep = "\u2B82"
+        let g:airline#extensions#tabline#right_alt_sep = "\u2B83"
+        let g:airline#extensions#tabline#exclude_preview = 1
+    " }
+
+    " gruvbox(theme) {
+        let g:spf13_use_gruvbox = 1
+        if !exists('g:spf13_use_gruvbox') && isdirectory(expand("~/.vim/bundle/gruvbox"))
+            let g:gruvbox_contrast_dark='soft'
+            " let g:gruvbox_contrast_dark='medium'
+            color gruvbox             " Load a colorscheme
+        endif
+    " }
+
+    " Session List {
+        set sessionoptions=blank,buffers,slash,unix,curdir,folds,tabpages,winsize
+        set viminfo='10,\"100,:20,%,!,n~/_viminfo
+    " }
+
+    " SnipMate {
+        " Setting the author var
+        let g:snips_author = 'D.J. <19871218david@gmail.com>'
+    " }
+
+    " Snippets {
+        if isdirectory(expand("~/.vim/bundle/neosnippet"))
+            let g:neosnippet#scope_aliases = {}
+            let g:neosnippet#scope_aliases['html'] = 'html,php'
+            let g:neosnippet#scope_aliases['twig'] = 'html.twig,html,js,php'
+        endif
+    " }
+
+    " PIV {
+        if isdirectory(expand("~/.vim/bundle/PIV"))
+            let g:DisableAutoPHPFolding = 1
+            let g:PIVAutoClose = 0
+        endif
+    " }
+
+    " vim-bookmarks {
+        if isdirectory(expand("~/.vim/bundle/vim-bookmarks"))
+            let g:bookmark_sign = "\u2665"
+            let g:bookmark_annotation_sign = "\u2605"
+        endif
+    " }
+
+    " mtth/scratch {
+        Bundle 'mtth/scratch.vim'
+    " }
+
+    " dense-analysis/ale {
+        Bundle 'dense-analysis/ale'
+    " }
+
+    " MattesGroeger/vim-bookmarks {
+        Bundle 'MattesGroeger/vim-bookmarks'
+    " }
+
+    " plasticboy/vim-markdown {
+        Bundle 'plasticboy/vim-markdown'
+    " }
+
+    " chr4/nginx {
+        Bundle 'chr4/nginx.vim.git'
+    " }
+
+    " vim-expand-region {
+        Bundle 'terryma/vim-expand-region'
+    " }
+
+    " gruvbox(theme) {
+        Bundle 'morhetz/gruvbox'
+    " }
+
+    " tomorrow-theme {
+        Bundle 'chriskempson/tomorrow-theme'
+    " }
+
+    " vim-startify {
+        Bundle 'mhinz/vim-startify'
+    " }
+
+    " vim-jsbeautify {
+        Bundle 'maksimr/vim-jsbeautify'
+    " }
+
+    " signify {
+        " let g:signify_realtime = 0
+        let g:signify_update_on_bufenter = 1
+        let g:signify_update_on_focusgained = 1
+    " }
+
+    " MiniBufExpl {
+        Bundle 'fholgado/minibufexpl.vim'
+    " }
+
+    " Rainbow {
+        if exists('g:rainbow_active')
+            let g:rainbow_conf = {
+            \    'guifgs': ['#A8FF60', '#FF73FD', 'royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+            \    'ctermfgs': ['green', 'magenta', 'lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+            \}
+        endif
+    "}
+
+" }
+
+" Functions {
+
+    " Strip whitespace {
+    function! StripTrailingWhitespaceExt()
+        " Preparation: save last search, and cursor position.
+        let _s=@/
+        let l = line(".")
+        let c = col(".")
+        " do the business:
+        %s/[]\+$//e
+        " clean up: restore previous search history, and cursor position
+        let @/=_s
+        call cursor(l, c)
+    endfunction
+    " }
+
+    "   let g:spf13_no_nerd_tree_state = 1
+    if !exists('g:spf13_no_nerd_tree_state') && isdirectory(expand("~/.vim/bundle/nerdtree"))
+
+        "1 if the var is set, 0 otherwise
+        function! s:setVariable(var, value)
+            exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
+            return 1
+        endfunction
+        function! s:saveNERDTreeState()
+            if !exists('g:LAST_SESSION')
+                return
+            endif
+            let varName = 'g:' . toupper(g:LAST_SESSION) . '_NT_STATE'
+            if g:NERDTree.IsOpen()
+                call s:setVariable(varName, 1)
+            else
+                call s:setVariable(varName, 0)
+            endif
+        endfunction
+        "
+        " s:NERDTreeCloseAllTabsOnQuit() {{{
+        "
+        " close NERDTree across all tabs
+        fun! NERDTreeCloseAllTabsOnQuit()
+          call s:saveNERDTreeState()
+          " if !(winnr("$") == 1)
+            " return
+          " endif
+
+          " close MiniBufExpl across all tabs
+          " if (winnr("$") == 1 && exists(':MBECloseAll'))
+            MBECloseAll
+          " endif
+          " tabdo doesn't preserve current tab - save it and restore it afterwards
+          " if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+          let l:current_tab = tabpagenr()
+          tabdo silent NERDTreeClose
+          exe 'tabn ' . l:current_tab
+          " endif
+          " echo 'Last session is undefined' . winnr("$")
+        endfun
+
+        " }}}
+        aug sessionman
+            au QuitPre * call NERDTreeCloseAllTabsOnQuit()
+        aug END
+
+    endif
+    " Initialize Session as needed {
+    if isdirectory(expand("~/.vim/bundle/nerdtree"))
+        function! s:RestoreSessionState()
+            if exists('g:LAST_SESSION')
+                let l:name = g:LAST_SESSION
+                if has_key(g:user_work_dir_map, l:name)
+                    " if the argument to vim is a directory, cd into it
+                    let dir = escape(g:user_work_dir_map[l:name], '\ ')
+                    if !exists('g:user_no_autochdir') && isdirectory(dir)
+                        try
+                            execute "cd " . dir
+                            " call nerdtree#echo("CWD is now: " . getcwd())
+                        catch
+                            throw "NERDTree.PathChangeError: cannot change CWD to " . dir
+                        endtry
+                        " echo 'CWD is ' . dir
+                    endif
+                    let l:state = toupper(l:name) . '_NT_STATE'
+                    if get(g:, l:state, 0) && !g:NERDTree.IsOpen()
+                        NERDTree
+                        wincmd p
+                    endif
+                endif
+            endif
+        endfunction
+        autocmd SessionLoadPost * call <SID>RestoreSessionState()
+    endif
+    " }
+    " Adjust Window Size {
+    if has('gui_running')
+        function! <SID>AdjustWinSize()
+            set lines=48
+            set columns=168
+        endfunction
+        autocmd SessionLoadPost * call <SID>AdjustWinSize()
+    endif
+    " }
+
+
+    " Initialize Session as needed {
+    if !exists('g:spf13_no_open_last_session')
+        function! s:SessionInitAsNeeded()
+        set lines=35
+        set columns=165
+            if exists('g:LAST_SESSION')
+                let g:current_session_name = g:LAST_SESSION
+                " echo 'LAST_SESSION is ' . g:current_session_name
+                execute 'silent! SessionOpenLast'
+            endif
+        endfunction
+        autocmd VimEnter * call <SID>SessionInitAsNeeded()
+    endif
+    " }
+" }
+
